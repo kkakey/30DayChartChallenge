@@ -1,0 +1,130 @@
+---
+title: "Day 1: Part-to-whole"
+author: "Kristen A, kkakey"
+date: "4/1/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#### **[30 Day Chart Challenge](https://github.com/Z3tt/30DayChartChallenge_Collection2021)**
+
+*************************************************
+
+Data:
+- [Billboard top 100 DJs, 2019](https://www.billboard.com/articles/news/dance/8504278/billboard-dance-100-2019-2/)
+- *[Underplayed]*(https://www.underplayedthefilm.com/) stats
+
+Women artists in the top 100:
+98 - TOKiMONSTA
+94 - Nina Kraviz
+82 - NERVO
+39 - REZZ
+36 - Alison Wonderland
+
+*************************************************
+
+```{r}
+library(tidyverse)
+library(ggforce)
+library(ggtext)
+# devtools::install_github('thomasp85/ggfx')
+library(ggfx)
+```
+
+```{r}
+# record placement
+x <- sort(rep(seq(1,500,50),10))
+y <- rep(seq(1,550,55),10)
+
+# IDs
+fi <- 1
+se <- 91
+full_ind <- c()
+for (i in 1:10) {
+  seq_vals <- seq(se,fi,by=-10)
+  full_ind <- c(full_ind,seq_vals)
+  fi <- fi + 1
+  se <- se + 1
+}
+
+df <- data.frame(x=x,y=y) %>%
+  mutate(ID = full_ind) %>%
+  mutate(women = ifelse(ID %in% c(36,39,82,94,98),1,0))
+
+# add name labels
+names <- df %>%
+  filter(women==1) %>%
+    mutate(name = case_when(ID==36 ~ "Alison",
+                          ID==39 ~ "REZZ",
+                          ID==82 ~ "NERVO",
+                          ID==94 ~ "Nina Kraviz",
+                          ID==98 ~ "TOKiMONSTA",
+                          T ~ "-"),
+           y = y+26.5) %>%
+  # fix Alison Wonderland name formatting - I don't like how it looks with just \n
+  rbind(., data.frame(x=251, y=354.5, ID=36, women=1, name="Wonderland"))
+names[names$name=="Alison",]$y <- 361.5
+```
+
+
+```{r}
+# plot
+ggplot(df) +
+  # add glow 
+  ggfx::with_outer_glow(
+    ggfx::with_inner_glow(
+      geom_circle(data= df %>%
+                      filter(women==1),
+                      aes(x0 = x, y0 = y,r=.4*25)),
+      colour="white", sigma=1),
+    colour="gold", sigma=10,expand=10) +
+  # main circle
+  geom_circle(aes(x0 = x, y0 = y, r=20), fill="black") +
+   # middle circle
+  geom_circle(aes(x0 = x, y0 = y, r=.4*20, fill=as.factor(women)),
+              size=.05) +
+  # inner lines
+  geom_circle(aes(x0 = x, y0 = y, r=.48*20), color="grey70", size=.025) +
+  geom_circle(aes(x0 = x, y0 = y, r=.52*20), color="grey70", size=.025) +
+  geom_circle(aes(x0 = x, y0 = y, r=.56*20), color="grey70", size=.025) +
+  geom_circle(aes(x0 = x, y0 = y, r=.6*20), color="grey70", size=.025) +
+  # outer lines
+  geom_circle(aes(x0 = x, y0 = y, r=.76*20), color="grey70", size=.025) +
+  geom_circle(aes(x0 = x, y0 = y, r=.83*20), color="grey70", size=.025) +
+  geom_circle(aes(x0 = x, y0 = y, r=.89*20), color="grey70", size=.025) +
+  coord_fixed() +
+  theme_void() +
+  scale_fill_manual(values=c("#8F6B00", "#FFD046")) +
+  theme(legend.position = "none",
+        plot.margin = margin(t=.5, r=0, b=0, l=0, "cm"),
+        plot.background = element_rect(fill="#D7362B", color=NA),
+        plot.title = element_text(family="EthnocentricRg-Regular", 
+                                  size=20, hjust=.5, vjust=-5,
+                                  margin = margin(t = 14, b = 7, l = 0)),
+        plot.subtitle = element_markdown(hjust=.5, family = "Miller-Text",
+                                         size=12, vjust=-30),
+        plot.caption = element_text(family = "Miller-Text", size=5, vjust=5)) +
+  geom_text(data= names, aes(x=x,y=y, 
+                    label=name,
+                    family="EthnocentricRg-Regular"),size=2) +
+  ggtitle("Billboard's Top 100 DJs, 2019") +
+  labs(subtitle = paste0(
+      "<span style = 'color:black'>","Only ","</span>",
+      "<span style = 'color:#FFD046'>5</span> ",
+      "<span style = 'color:black'>","of the 100 artists were ","</span>",
+      "<span style = 'color:#FFD046'>women</span> "),
+      caption = "Data: Billboard | Created by: @kkakey") +
+  ggsave("plot-final.png", dpi=650)
+```
+
+
+
+
+Resources:
+- help getting started with [{ggfx}](http://lenkiefer.com/2021/03/17/watch-your-charts-glow-up-with-r-and-ggfx/)
+
+
