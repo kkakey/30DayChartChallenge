@@ -1,0 +1,69 @@
+---
+title: "Day 2 - Pictogram"
+author: "Kristen A, kkakey"
+date: "4/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message =F, warning =F, error = F)
+```
+
+#### [30 Day Chart Challenge](https://github.com/Z3tt/30DayChartChallenge_Collection2021)
+
+
+Data from:
+
+- [National Confections Association](https://candyusa.com/story-of-chocolate/fun-facts-about-chocolate/) and [Insider](https://www.insider.com/chocolate-industry-facts-statistics-consumption-2019-11)
+- "According to the National Confectioners Association, it takes approximately 400 cocoa beans to make one pound of chocolate. For reference, a Hershey's milk chocolate bar weighs 1.55 ounces. As there are 16 ounces in a pound, that means about 10 Hershey's bars equal one pound of chocolate, with about 40 cocoa beans going into each bar" (Demarest, 2019).
+
+```{r}
+library(tidyverse)
+library(ggimage)
+library(magick)
+```
+
+```{r}
+# add color to cocoa bean image
+bean <- image_read("./images/cocoa_beans.png")
+b <- image_fill(bean, "#663D22", fuzz=100)
+image_write(b, "./images/cocoa_beans-color.png")
+```
+
+```{r}
+d <- data.frame(x = rep(seq(0,5,.55),4),
+                y = sort(rep(seq(6.5,10,1.125),10)),
+                im = "./images/cocoa_beans-color.png"
+)
+
+ggplot(d, aes(x, y)) + geom_image(aes(image=im, size = I(.085)), by="width") + 
+  geom_image(aes(image="./images/chocolate-bar.png" , x=2.5,y=3), size=.3) +
+  ylim(0,11.5) + 
+  theme_void() +
+  theme(plot.margin = margin(t=1, r=1.5, b=-1.5, l=1.5, "cm"),
+        plot.title = element_text(family = "ChocolateBarDemo", size=65,
+                                  hjust=.5, color="#69265E"),
+        panel.background = element_rect(fill="#F1D302", color=NA),
+        plot.background = element_rect(fill="#F1D302", color=NA),
+        plot.tag.position = c(1, .095),
+        plot.tag = element_text(family = "ChocolateBarDemo", size=5, hjust=1,
+                                color="#69265E")
+        ) +
+  geom_text(aes(x=1.9,y=11,label="There are approximately 40 cocoa beans...",
+                family="Wonderbar"), color="#69265E", size=5) +
+  geom_text(aes(x=4.2,y=4,label="in 1 chocolate bar!",family="Wonderbar"),
+            color="#69265E", size=5) +
+  ggtitle("CHOCOLATE") +
+  labs(tag = "Data: National Confectioners Association | Created by: @kkakey") +
+  ggsave("plot.png", dpi=650)
+```
+
+
+- Coco beans created by [Ben Davis](https://thenounproject.com/term/cocoa-beans/274887/)
+- Candy bar created by [photo3idea_studio](https://www.flaticon.com/free-icon/chocolate-bar_2553591?term=chocolate%20bar&related_id=2553591)
+- Fonts: 
+  - [Chocolate Bar Demo](https://www.1001fonts.com/chocolate-bar-demo-font.html)
+  - [Wonderbar](https://www.1001fonts.com/wonderbar-font.html)
+
+
+
