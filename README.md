@@ -13,3 +13,8 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 #### Day 1 - [Part-to-whole](https://github.com/kkakey/30DayChartChallenge/blob/main/Day01-Part_to_whole/day1.Rmd) 
 
 ![](https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day01-Part_to_whole/plot-final.png)
+
+**************************************************************************************************
+#### Day 2 - [Pictogram](https://github.com/kkakey/30DayChartChallenge/blob/main/Day02-Pictogram/day2.Rmd) 
+
+![](https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day02-Pictogram/plot.png)
