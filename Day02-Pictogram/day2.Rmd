@@ -59,7 +59,7 @@ ggplot(d, aes(x, y)) + geom_image(aes(image=im, size = I(.085)), by="width") +
 ```
 
 
-- Coco beans created by [Ben Davis](https://thenounproject.com/term/cocoa-beans/274887/)
+- Cocoa beans created by [Ben Davis](https://thenounproject.com/term/cocoa-beans/274887/)
 - Candy bar created by [photo3idea_studio](https://www.flaticon.com/free-icon/chocolate-bar_2553591?term=chocolate%20bar&related_id=2553591)
 - Fonts: 
   - [Chocolate Bar Demo](https://www.1001fonts.com/chocolate-bar-demo-font.html)
