@@ -1,0 +1,110 @@
+---
+title: "Day 3 - Historical"
+author: "Kristen A, kkakey"
+date: "4/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### **[30 Day Chart Challenge](https://github.com/Z3tt/30DayChartChallenge_Collection2021)**
+
+*************************************************
+
+Data:
+- [USDA](https://www.nass.usda.gov/Statistics_by_State/Wisconsin/Publications/Dairy/index.php)
+  - [PDF file](https://www.nass.usda.gov/Statistics_by_State/Wisconsin/Publications/Dairy/Historical_Data_Series/brt2004.pdf)
+  
+- Inspired by [this visualization](https://dfwblobstorage.blob.core.windows.net/ewcmediacontainer/eatwisconsincheese/media/content/statistics/lg_wi_dairy_farms_milk_production_30-present.gif)
+
+*************************************************
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+farms <- read_csv("./raw-data/farms_monthly.csv")
+
+# initial csv cleaning
+farms <- farms[c(2:nrow(farms)),]
+farms[farms=="n.a."] <- NA
+
+# remove comma from character columns and convert all to int
+farms <- sapply(farms, function(x) as.numeric(gsub(",","",x)) )
+# convert back to dataframe
+farms <- farms(farms)
+
+farms <- farms %>%
+  pivot_longer(., 
+               cols=colnames(farms)[2:length(colnames(farms))],
+               names_to = "month") %>%
+  filter(month != "Annual") %>%
+  mutate(month_num = rep_len(seq(1,12), nrow(.)),
+         year_mon = zoo::as.yearmon(paste0(as.character(YEAR), 
+                                           "-", month_num))) %>%
+  # remove NA rows
+  drop_na() %>%
+  group_by(YEAR) %>%
+  mutate(mean_val = mean(value)) %>%
+  arrange(YEAR)
+```
+
+```{r}
+# layout of points
+y <- seq(2003,2021)
+x <- rep_len(1, length(y))
+mean_val <- unique(farms$mean_val)
+df <- data.frame(x=x,y=y,mean_val=mean_val)
+
+# for labels
+x_lab <- rep_len(.93, length(y))
+labels <- c("2003", "", "", "2006", "", "", "2009", "", "", "2012",
+            "", "", "2015", "", "", "2018", "", "", "2021")
+label_df <- data.frame(y=y, x_lab=x_lab,labels=labels)
+df <- df %>%
+  mutate(lab = ifelse(y %in% c(seq(2003,2021,3)),round(mean_val),""),
+         lab = as.numeric(lab))
+```
+
+```{r}
+# plot
+ggplot(df, aes(x, y, size=mean_val)) +
+  geom_point(aes(fill=mean_val), pch=21, color="black") +
+  scale_size(range = c(4, 9))+
+  geom_text(aes(x=1.07, y=y, label=scales::comma(lab)), 
+            size=3,color="white") +
+  annotate("text",label="Year", x=.93, y=2002, size=3, color="white",
+           family="Roboto-Black") +
+  geom_text(data=label_df, aes(x=x_lab, y=y, label=labels),
+            size=3,color="white") +
+  annotate("text",label="Avg. Number\n of Dairy Farms", x=1.07, y=2001.8,
+           size=3, color="white", family="Roboto-Black") +
+  scale_y_reverse( lim=c(2023.5,2001.8)) +
+  scale_fill_gradient(low = "#F6CDB6",high = "#80360F") +
+  xlim(.75,1.25) +
+  theme_void() +
+  theme(legend.position = "none",
+        plot.margin = margin(t=.1, r=0, b=-.2, l=0, "cm"),
+        plot.background = element_rect(fill="#26240f",color=NA),
+        panel.background = element_rect(fill="#26240f",color=NA),
+        plot.title = element_text(family="AlfaSlabOne-Regular", hjust=.5,
+                                  vjust=0,
+                                  color="white"),
+        plot.caption.position = "plot",
+        text = element_text(family="Roboto-Regular"),
+        plot.caption = element_text(color="white",family="Roboto-Regular",
+                                    size=4,vjust=15,hjust=.5)) +
+  ggtitle("The DECLINE\nof\nWisconsin's\nDAIRY FARMERS") +
+  geom_richtext(aes(x=1,y=2023,
+                    label=paste0("Milk production in the state continues to increase,<br>yet the number of farmers continues to decrease, <br>as fewer, more corporate farms produce the state's milk."),family="Roboto-Regular"), 
+                    fill = NA, label.color = NA, size=3, color="white") +
+  labs(caption = "Data: USDA | Created by: @kkakey") +
+  ggsave("plot-final.png", dpi=650, width=3.8)
+```
+
+
+
+
