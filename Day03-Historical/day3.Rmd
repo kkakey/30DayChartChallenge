@@ -23,6 +23,7 @@ Data:
 
 ```{r}
 library(tidyverse)
+library(ggtext)
 ```
 
 ```{r}
