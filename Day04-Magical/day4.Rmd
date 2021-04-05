@@ -1,0 +1,114 @@
+---
+title: "Day 4 - Magical"
+author: "Kristen A, kkakey"
+date: "4/4/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### **[30 Day Chart Challenge](https://github.com/Z3tt/30DayChartChallenge_Collection2021)**
+
+*************************************************
+
+Harry Potter text data comes from harry_potter_nlp[https://github.com/raffg/harry_potter_nlp]
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(ggtext)
+```
+
+```{r}
+full_df <-data.frame()
+for (book_num in 1:7) {
+
+    b1 <- ldf[[book_num]]
+    colnames(b1) <- "col"
+    b1_text <- b1 %>%
+      filter(col!=toupper(col)) %>%
+      unnest_tokens(word, col) %>%
+      mutate(word = str_extract(word, "[a-z']+"),
+             word = str_replace_all(word, pattern="'", "")) %>%
+      drop_na()
+      
+    # remove rows with 'Pages Harry Potter and the....'
+    ind_remove <- c()
+    for (i in seq_along(b1_text$word)) {
+      if (b1_text$word[i]=="page" & b1_text$word[i+1]=="harry" & b1_text$word[i+2]=="potter") {
+        ind_remove <- c(ind_remove,i)
+      }
+    }
+    full_ind_remove <- c()
+    for (i in ind_remove) {
+      vals <- seq(i,i+8)
+      full_ind_remove <- c(full_ind_remove, vals)
+    }
+    # remove rows with 'Harry Potter and the....'
+    ind_remove2 <- c()
+    for (i in seq_along(b1_text$word)) {
+      if (b1_text$word[i]=="harry" & b1_text$word[i+1]=="potter"  & b1_text$word[i+2]=="and") {
+        ind_remove2 <- c(ind_remove2,i)
+      }
+    }
+    full_ind_remove2 <- c()
+    for (i in ind_remove2) {
+      vals <- seq(i,i+7)
+      full_ind_remove2 <- c(full_ind_remove2, vals)
+    }
+    
+    b1_text <- data.frame(b1_text[-c(full_ind_remove,full_ind_remove2),])
+    colnames(b1_text) <- "word"
+    
+    # add to dataframe
+    booknum <- book_num
+    magic_num <- b1_text %>%
+      count(word) %>% filter(word=="magic") %>% pull(n)
+    magical_num <- b1_text %>%
+      count(word) %>% filter(word=="magical") %>% pull(n)
+    wizard_num <- b1_text %>%
+      count(word) %>% filter(word=="wizard") %>% pull(n)
+    word_tot <- nrow(b1_text)
+    full_df <- rbind(full_df,data.frame(booknum, magic_num, magical_num, wizard_num, word_tot))
+}
+
+# #compute series stats
+# average proportion of words 'magic' or 'magical' comrpises
+mean_prop <- full_df %>%
+  mutate(prop = round(magic_num + magical_num)/word_tot,
+         mean_prop = mean(prop)) %>% pull(mean_prop) %>% unique()
+
+# number of times in the entire series magic or magical appears
+magic_appears <- sum(apply(full_df %>%
+  select(magic_num, magical_num), 2, sum))
+```
+
+
+```{r}
+p <- ggplot() + 
+  geom_text(aes(x=1,y=3,label='"Magic"',family="HarryP"), size=12) +
+  geom_text(aes(x=1.25,y=3,label='and',family="New"), size=6) +
+  geom_text(aes(x=1.51,y=3,label='"Magical"',family="HarryP"), size=12) +
+  geom_text(aes(x=1.45,y=2.6,label='appear in the Harry Potter series',family="New"), size=6) +
+  geom_text(aes(x=1.31,y=2.25,label='only',family="New"), size=4) +
+  geom_text(aes(x=1.45,y=2,label=magic_appears,family="HarryP"), size=12) +
+  geom_text(aes(x=1.6,y=1.9,label='times',family="New"), size=4) +
+  geom_richtext(aes(label=paste0('comprising on average about ', 
+                         round(mean_prop, 5), 
+                         " percent<br>of a book's total words"), family="New",
+                         x=1.4,y=1.4),fill = NA, label.color = NA) +
+  xlim(.85,2) + ylim(0,4) +
+  geom_text(aes(x=1.8,y=1.1,label='Created by: @kkakey',family="New"), size=2) +
+  theme_void()
+  
+ggbackground(p, background = "./raw-data/paper-old-texture-parchment.jpg") +
+  ggsave("plot.png", width=5, height=5,dpi=650)
+```
+
+
+Fonts:
+- [Lumos](https://www.1001fonts.com/lumos-font.html) (in code as 'New')
+- [Harry P](https://www.dafont.com/harry-p.font) 
+
