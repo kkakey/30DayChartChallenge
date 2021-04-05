@@ -34,5 +34,5 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 #### Day 2 - [Magical](https://github.com/kkakey/30DayChartChallenge/blob/main/Day04-Magical/day4.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day04-Magical/plot.png" width="650" ></a>
+<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day04-Magical/plot.png" width="850" ></a>
 </p>
