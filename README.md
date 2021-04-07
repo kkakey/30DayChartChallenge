@@ -31,8 +31,22 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 </p>
 
 **************************************************************************************************
-#### Day 2 - [Magical](https://github.com/kkakey/30DayChartChallenge/blob/main/Day04-Magical/day4.Rmd) 
+#### Day 4 - [Magical](https://github.com/kkakey/30DayChartChallenge/blob/main/Day04-Magical/day4.Rmd) 
 
 <p align="center">
 <a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day04-Magical/plot.png" width="700" ></a>
+</p>
+
+**************************************************************************************************
+#### Day 5 - [Slope](https://github.com/kkakey/30DayChartChallenge/blob/main/Day05-Slope/day5.Rmd) 
+
+<p align="center">
+<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day05-Slope/plot.png" width="500" ></a>
+</p>
+
+**************************************************************************************************
+#### Day 6 - [Experimental](https://github.com/kkakey/30DayChartChallenge/blob/main/Day06-Experimental/day6.Rmd) 
+
+<p align="center">
+<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day06-Experimental/plot-21.png" width="500" ></a>
 </p>
