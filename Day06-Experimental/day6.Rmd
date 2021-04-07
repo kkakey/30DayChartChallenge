@@ -1,0 +1,173 @@
+---
+title: "day6"
+author: "Kristen A, kkakey"
+date: "4/6/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(spotifyr)
+library(tidyverse)
+library(ggtext)
+```
+
+```{r}
+access_token <- get_spotify_access_token(  
+  client_id = "my_client_id",
+  client_secret = "my_client_secret")
+
+fav <- get_my_top_artists_or_tracks(type = 'tracks', time_range = 'short_term', 
+                                    limit = 50, 
+                                    authorization= get_spotify_authorization_code(
+                                                   client_id = "my_client_id",
+                                                   client_secret = "my_client_secret")) %>% 
+    mutate(artist.name = map_chr(artists, function(x) x$name[1])) 
+
+med_fav <- get_my_top_artists_or_tracks(type = 'tracks', time_range = 'medium_term',
+                                        limit = 50, 
+                                        authorization= get_spotify_authorization_code(
+                                                       client_id = "my_client_id",
+                                                       client_secret = "my_client_secret")) %>% 
+    mutate(artist.name = map_chr(artists, function(x) x$name[1])) 
+
+top_fav <- get_my_top_artists_or_tracks(type = 'tracks', time_range = 'long_term', 
+                                        limit = 50, 
+                                        authorization= get_spotify_authorization_code(
+                                                       client_id = "my_client_id",
+                                                       client_secret = "my_client_secret")) %>% 
+    mutate(artist.name = map_chr(artists, function(x) x$name[1]))
+
+
+all_favs <- rbind(fav, med_fav, top_fav)
+all_favs <- all_favs %>%
+                              # remove Jazz
+  filter((!artist.name %in% c("Cafe Music BGM channel", "Classic Jazz", 
+                              "Cafe Music BGM channel", "Jazz Morning Playlist",
+                              # and artists that cause error
+                              "Ivy Adara","Maisie Peters"
+                              )))
+
+# get info on artists' songs
+all_df <- data.frame()
+for (artist in unique(all_favs$artist.name)) {
+  print(artist)
+  output <- get_artist_audio_features(artist,authorization = access_token)
+  all_df <- rbind(all_df,output) 
+}
+
+# only keep the songs in my favorites list
+some_top_songs <- all_df %>%
+  filter(track_id %in% all_favs$id)
+
+## save as dataframe
+# write_csv(some_top_songs %>%
+#       select(artist_name, track_id, valence, tempo,
+#              liveness, danceability, energy), "my_songs.csv")
+# some_top_songs <-read_csv("my_songs.csv")
+```
+
+```{r}
+# randomly generate x/y coordiantes of points
+gen_vals <- function(df=some_top_songs) {
+     for (j in 1:nrow(df)) { 
+          x <- runif(1, max = 10)
+          y <- runif(1, max = 10)
+          
+          x_vals <- c(x, x_vals)
+          y_vals <- c(y, y_vals)
+     }
+  return(list(x_vals, y_vals))
+}
+
+set.seed(9)
+some_top_songs$x <- gen_vals()[1]
+some_top_songs$y <- gen_vals()[2]
+some_top_songs$x2 <- gen_vals()[1]
+some_top_songs$y2 <- gen_vals()[2]
+some_top_songs$x3 <- gen_vals()[1]
+some_top_songs$y3 <- gen_vals()[2]
+some_top_songs$x4 <- gen_vals()[1]
+some_top_songs$y4 <- gen_vals()[2]
+some_top_songs$x5 <- gen_vals()[1]
+some_top_songs$y5 <- gen_vals()[2]
+```
+
+```{r}
+# color palette for points
+color_vals <- c("#EF8354", "#5B5941", "#4E4E65", "#A31621", "#157A6E", "#F092DD", "#6D98BA",
+                "#F1E4F3", "#1D7874", "#717744", "#188FA7", "#7A4419", "#33202A", "#3D348B",
+                "#046865", "#B0A1BA", "#BBC5AA")
+```
+
+```{r}
+# plot
+ggplot(some_top_songs) + 
+  geom_point(aes(x,y,size=valence, fill=as.factor(artist_name)),
+             colour="grey70",pch=21) +
+  geom_point(aes(x2,y2,size=tempo*10, fill=as.factor(artist_name)),
+             colour="#00E8FC",pch=21) +
+  geom_point(aes(x3,y3,size=liveness*10, fill=as.factor(artist_name)),
+             colour="#5FB49C",pch=21) +
+  geom_point(aes(x4,y4,size=danceability*10, fill=as.factor(artist_name)),
+             colour="#DEEFB7",pch=21) +
+  geom_point(aes(x5,y5,size=energy*10, fill=as.factor(artist_name)),
+             colour="#90C2E7",pch=21) +
+  theme_void() +
+  theme(legend.position = "none",
+        panel.background = element_rect(fill="#391836",color=NA),
+        plot.margin = margin(t=-.5, r=-.5, b=-.5, l=.5 , "cm")
+        ) +
+  scale_fill_manual(values = color_vals) +
+  ggsave("plot.png")
+```
+
+
+```{r}
+# plot with title and description
+ggplot(some_top_songs) + 
+  geom_point(aes(x,y,size=valence, fill=as.factor(artist_name)),
+             colour="grey70",pch=21) +
+  geom_point(aes(x2,y2,size=tempo*10, fill=as.factor(artist_name)),
+             colour="#00E8FC",pch=21) +
+  geom_point(aes(x3,y3,size=liveness*10, fill=as.factor(artist_name)),
+             colour="#5FB49C",pch=21) +
+  geom_point(aes(x4,y4,size=danceability*10, fill=as.factor(artist_name)),
+             colour="#DEEFB7",pch=21) +
+  geom_point(aes(x5,y5,size=energy^100, fill=as.factor(artist_name)),
+             colour="#90C2E7",pch=21) +
+  theme_void() +
+  theme(legend.position = "none",
+        panel.background = element_rect(fill="#391836",color=NA),
+        plot.background = element_rect(fill="#391836",color=NA),
+        plot.margin = margin(t=.5, r=.25, b=.10, l=.25 , "cm"),
+        plot.title = element_text(family="Soulmate", hjust=.5,size=17,
+                                  color="#D3D3D3"),
+        plot.caption = element_text(family="Soulmate", size=10)
+        ) +
+  ggtitle("Attributes of Favorite Songs by My Favorite Artists") +
+  geom_richtext(aes(x=5,y=10.6,
+                    label=paste0(
+      "<span style = 'color:#C0C0C0'>","Each dot in a song and the fill represents one of my top seventeen favorite artists.<br> The stroke outline represents the attribute,","</span>",
+      " <span style = 'color:#00E8FC;'>tempo,</span>",
+      " <span style = 'color:grey70;'>valence,</span>",
+      " <span style = 'color:#5FB49C'>","liveness,","</span>",
+      " <span style = 'color:#DEEFB7;'>danceability,</span> ",
+      " <span style = 'color:#C0C0C0'>","and","</span>",
+      " <span style = 'color:#90C2E7'> energy.</span>",
+      "<span style = 'color:#C0C0C0'>","<br>Size correponds to the attribute's value.", "</span>"),
+                    family="Neuton-Regular"),
+                    fill = NA, label.color = NA, size=3, color="#C0C0C0") +
+  scale_fill_manual(values = color_vals) +
+  labs(caption = "Created by: @kkakey") +
+  ggsave("plot-21.png")
+```
+
+
+Font:
+- [Soulmate](https://www.fontspace.com/soulmate-font-f18493)
+
+

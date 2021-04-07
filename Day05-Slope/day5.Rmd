@@ -1,0 +1,75 @@
+---
+title: "day5"
+author: "Kristen A, kkakey"
+date: "4/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### [30 Day Chart Challenge](https://github.com/Z3tt/30DayChartChallenge_Collection2021)
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+# https://www.zumper.com/rent-research/new-york-ny
+# data as of April 5, 2021
+df <- data.frame(rbind(c("studio", 2650, 2015),
+                      c("one-bedroom", 3016, 2360),
+                      c("two-bedroom", 3357, 2652),
+                      c("two-bedroom", 3669, 2876)))
+months<-12
+colnames(df) <- c("apt_type", "Jan_2020", "Jan_2021")
+```
+
+```{r}
+ggplot(df) + 
+  geom_segment(aes(x=0,xend=0,y=Jan_2020,yend=Jan_2021), color="#1F2A33") +
+  geom_segment(aes(x=months,xend=months,y=Jan_2020,yend=Jan_2021),
+               color="#1F2A33") +
+  geom_segment(aes(x=0,xend=months,y=Jan_2020,yend=Jan_2021),size=.75,
+               color = "#A63A50") +
+  geom_point(aes(x=0, Jan_2020), color = "#A63A50") + 
+  geom_point(aes(x=months, Jan_2021), color = "#A63A50") +
+  theme(plot.background = element_rect(fill = "#77B6EA", color=NA),
+        panel.background = element_rect(fill = "#77B6EA", color=NA),
+        panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
+        plot.margin = margin(t=2, r=1, b=1, l=1, "cm"),
+        axis.ticks = element_blank(), axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        text = element_text(family="Lato-Regular"),
+        plot.title = element_text(size=18, hjust=.2, vjust=5),
+        plot.caption = element_text(size=4, hjust=.95, vjust=36)) +
+  xlab("") + ylab("") +
+  geom_text(aes(x=0,y=8.5,label="Jan. 2020", family="Lato-Regular")) +
+  geom_text(aes(x=12,y=8.5,label="Jan. 2021", family="Lato-Regular")) +
+  geom_text(aes(x=.5,y=3.05,label="Studio", family="Lato-Bold"), 
+                size=2.8, angle=-15) +
+  geom_text(aes(x=.97,y=5.85,label="One-Bedroom", family="Lato-Bold", 
+                angle=-27), size=2.8) +
+  geom_text(aes(x=1,y=6.9,label="Two-Bedroom", family="Lato-Bold"), 
+            size=2.8, angle=-21) +
+  geom_text(aes(x=1.1,y=7.87,label="Three-Bedroom", family="Lato-Bold"), 
+            size=2.8, angle=-21) +
+  geom_text(aes(x=-.5,y=3,label="$2,650", family="Lato-Regular"), size=2.5) +
+  geom_text(aes(x=-.5,y=6,label="$3,016", family="Lato-Regular"), size=2.5) +
+  geom_text(aes(x=-.5,y=7,label="$3,357", family="Lato-Regular"), size=2.5) +
+  geom_text(aes(x=-.5,y=8,label="$3,669", family="Lato-Regular"), size=2.5) +
+  geom_text(aes(x=12.5,y=1,label="$2,015", family="Lato-Regular"), size=2.5) +
+  geom_text(aes(x=12.5,y=2,label="$2,360", family="Lato-Regular"), size=2.5) +
+  geom_text(aes(x=12.5,y=4,label="$2,652", family="Lato-Regular"), size=2.5) +
+  geom_text(aes(x=12.5,y=5,label="$2,876", family="Lato-Regular"), size=2.5) +
+  ggtitle("Median Drop in Rent in NYC") +
+  labs(caption = "Data: Zumper (as of April 5, 2021)\nCreated by: @kkakey") +
+  ggsave("plot.png", dpi=650)
+  
+```
+
+
+Resources
+- [Slopegraphs in R with ggplot2](https://acaird.github.io/computers/r/2013/11/27/slopegraphs-ggplot)
+
