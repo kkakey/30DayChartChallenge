@@ -10,28 +10,40 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-library(ggridges)
+library(sf)
 library(tidyverse)
 ```
 
-
 ```{r}
-brazil_loss <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-04-06/brazil_loss.csv')
-
+roads <- read_sf("data/roads.shp")
+sidewalks <- read_sf("data/sidewalks.shp")
+water <- read_sf("data/water.shp")
+city <- read_sf("data/Madison_Urban_Area_Boundary-shp/Madison_Urban_Area_Boundary.shp")
 ```
 
 ```{r}
-forest_area %>% 
-  filter(entity!="World") %>%
-  ggplot(., aes(forest_area, year, group=year)) + 
-  scale_colour_gradient(low = "blue", high = "red", space = "Lab",
-        na.value = "grey50", guide = "colourbar", aesthetics = "fill", 
-        name = "") +
-  geom_density_ridges_gradient(scale=8)
+# (sum(water$area) / city$area) # 10% of the city is lakes and rivers!
+
+ggplot() +
+  geom_sf(data=city, color="#06D6A0", fill="#06D6A0") +
+  geom_sf(data=water, color="grey10", fill="#44C3EE", size=.25) +
+  geom_sf(data=roads, size=.05) +
+  geom_sf(data=sidewalks, size=.025) +
+  coord_sf(expand = FALSE,  ylim = c(42.88, 43.28), xlim = c( -89.7, -89.1)) +
+  theme_void() +
+  theme(plot.background =  element_rect(fill="#073B4C", color="#073B4C"),
+       panel.background =  element_rect(fill="#073B4C", color="#073B4C"),
+       plot.subtitle = element_text(vjust = -27, hjust = .145, size=10,
+                                    family="Roboto-Bold", color="#D9F3FC"),  
+       plot.margin=grid::unit(c(1,0,0,1), "cm"),
+       plot.caption = element_text(vjust=20.7, hjust=.895, size=4, family="Roboto-Bold")
+       ) +
+  geom_text(aes(x = -89.6197, y = 43.2512, label="RIVERS", family="chlorinr"), 
+            size=10, color="#44C3EE") +
+  geom_text(aes(x = -89.5397, y = 43.2480, label="and", family="Roboto-Bold"), size=4, color="#D9F3FC") +
+  geom_text(aes(x = -89.4690, y = 43.2512, label="LAKES", family="chlorinr"), size=10, color="#44C3EE") +
+  labs(#subtitle="make up 10% of the city of Madison.",
+    subtitle="make up 10% of Madison, WI.",
+       caption = "Data: Madison Open Data | Created by: @kkakey") +
+  ggsave("plot.png", dpi=650)
 ```
-
-
-```{r}
-unique(forest_area$entity)
-```
-
