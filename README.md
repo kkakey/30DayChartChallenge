@@ -50,3 +50,10 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 <p align="center">
 <a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day06-Experimental/plot-21.png" width="750" ></a>
 </p>
+
+**************************************************************************************************
+#### Day 6 - [Physical](https://github.com/kkakey/30DayChartChallenge/blob/main/Day07-Distribution/day7.Rmd) 
+
+<p align="center">
+<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day07-Distribution/plot.png" width="750" ></a>
+</p>
