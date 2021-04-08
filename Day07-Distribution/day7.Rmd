@@ -47,3 +47,7 @@ ggplot() +
        caption = "Data: Madison Open Data | Created by: @kkakey") +
   ggsave("plot.png", dpi=650)
 ```
+
+
+Font: [Chlorinar](https://www.1001fonts.com/chlorinar-font.html)
+
