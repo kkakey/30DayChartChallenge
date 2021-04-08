@@ -1,0 +1,37 @@
+---
+title: "day7"
+author: "Kristen A, kkakey"
+date: "4/7/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggridges)
+library(tidyverse)
+```
+
+
+```{r}
+brazil_loss <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-04-06/brazil_loss.csv')
+
+```
+
+```{r}
+forest_area %>% 
+  filter(entity!="World") %>%
+  ggplot(., aes(forest_area, year, group=year)) + 
+  scale_colour_gradient(low = "blue", high = "red", space = "Lab",
+        na.value = "grey50", guide = "colourbar", aesthetics = "fill", 
+        name = "") +
+  geom_density_ridges_gradient(scale=8)
+```
+
+
+```{r}
+unique(forest_area$entity)
+```
+
