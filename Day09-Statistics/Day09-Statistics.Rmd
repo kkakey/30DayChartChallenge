@@ -1,0 +1,70 @@
+---
+title: "Day 9"
+author: "Kristen A, kkakey"
+date: "4/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+pal1 <- c("#D5B942", "#D9D375", "#E3DE8F", "#EDFBC1", "#BFCBC2")
+pal2 <- c("#EAE1DF", "#B79492", "#917C78", "#BFCBC2")
+pal3 <- c("#453750", "#9381FF", "#B8B8FF", "#453750")
+pal4 <- c("#001B2E", "#294C60", "#ADB6C4", "#FFE19C")
+pal5  <- c("#093824", "#709255", "#95B46A", "#83781B")
+pal6 <- c("#EFBC9B", "#A8B4A5", "#EE92C2", "#9D6A89")
+
+background <- data.frame(background = c("#ADE4FF", "#3C1518", "#FDCA40", "#C06E52", "#677DB7","#003844"))
+```
+
+
+```{r}
+for (val in c("pal1", "pal2", "pal3", "pal4", "pal5", "pal6")) {
+    
+    if (val!="background") {
+      
+      # generate data
+      df = tibble(
+            x = 1:length, color = sample(LETTERS[1:4], 
+                                         size = length, 
+                                         replace = TRUE),
+            y_norm = rnorm(length, mean = 0, sd = 2))
+      
+      num <- substr(val,4,5)
+      
+      ggplot(data = df) +
+        geom_stream(aes(x = x, y = y_norm, color = color, fill = color),
+                    type = "proportional") +
+        scale_color_manual(values = rev(eval(as.name(val)))) +
+        scale_fill_manual(values = rev(eval(as.name(val)))) +
+        coord_polar() +ylim(.02,NA) +
+        theme_void() +
+        theme(legend.position = "none",
+              plot.background = element_rect(fill=background[num,],
+                                             color=NA),
+              text = element_text("FallisComing-Regular")) +
+        # labs(caption = "Created by: @kkakey") +
+        ggsave(paste0("p",substr(val,3,4),".png"))
+  }
+}
+```
+
+```{r}
+# combine plots
+library(cowplot)
+ggdraw() + draw_image("pl1.png", scale = .5, x = .33,y = .25) +
+  draw_image("pl2.png", scale = .5, x = 0,y = .25) +
+  draw_image("pl3.png", scale = .5, x = -.33,y = .25) +
+  draw_image("pl5.png", scale = .5, x = .33,y = -.25) +
+  draw_image("pl4.png", scale = .5, x = 0,y = -.25) +
+  draw_image("pl6.png", scale = .5, x = -.33,y = -.25) +
+  ggsave("final.png", width=6, height=4)
+```
+
+
+Fonts:
+- [Fall is Coming Font](https://www.fontspace.com/fall-is-coming-font-f30492)
+
