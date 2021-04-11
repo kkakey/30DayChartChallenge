@@ -62,7 +62,7 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 #### Day 9 - [Statistics](https://github.com/kkakey/30DayChartChallenge/blob/main/Day09-Statistics/Day09-Statistics.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day07-Distribution/Day09-Statistics/final.png" width="750" ></a>
+<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day09-Statistics/final.png" width="750" ></a>
 </p>
 
 
