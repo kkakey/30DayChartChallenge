@@ -52,8 +52,17 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 </p>
 
 **************************************************************************************************
-#### Day 6 - [Physical](https://github.com/kkakey/30DayChartChallenge/blob/main/Day07-Distribution/day7.Rmd) 
+#### Day 7 - [Physical](https://github.com/kkakey/30DayChartChallenge/blob/main/Day07-Distribution/day7.Rmd) 
 
 <p align="center">
 <a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day07-Distribution/plot.png" width="750" ></a>
 </p>
+
+**************************************************************************************************
+#### Day 9 - [Statistics](https://github.com/kkakey/30DayChartChallenge/blob/main/Day09-Statistics/Day09-Statistics.Rmd) 
+
+<p align="center">
+<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day07-Distribution/Day09-Statistics/final.png" width="750" ></a>
+</p>
+
+
