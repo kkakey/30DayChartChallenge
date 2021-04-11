@@ -20,7 +20,6 @@ pal6 <- c("#EFBC9B", "#A8B4A5", "#EE92C2", "#9D6A89")
 background <- data.frame(background = c("#ADE4FF", "#3C1518", "#FDCA40", "#C06E52", "#677DB7","#003844"))
 ```
 
-
 ```{r}
 for (val in c("pal1", "pal2", "pal3", "pal4", "pal5", "pal6")) {
     
@@ -36,7 +35,8 @@ for (val in c("pal1", "pal2", "pal3", "pal4", "pal5", "pal6")) {
       num <- substr(val,4,5)
       
       ggplot(data = df) +
-        geom_stream(aes(x = x, y = y_norm, color = color, fill = color),
+        ggstream::geom_stream(aes(x = x, y = y_norm, 
+                                  color = color, fill = color),
                     type = "proportional") +
         scale_color_manual(values = rev(eval(as.name(val)))) +
         scale_fill_manual(values = rev(eval(as.name(val)))) +
