@@ -1,0 +1,70 @@
+---
+title: "Day 10"
+author: "Kristen A, kkakey"
+date: "4/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(ggmosaic)
+```
+
+```{r}
+items <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/items.csv')
+
+pal <- c("#F79256", "#FBD1A2", "#7DCFB6", "#00B2CA", "#1D4E89",
+         "#847577", "#A6A2A2", "#CFD2CD", "#E5E6E4", "#FBFBF2")
+
+top_cateogories <- items %>%
+  count(category) %>%
+  arrange(desc(n)) %>%
+  head(10) %>% pull(category)
+
+items$buy_value_cut <- with(items, 
+                              cut(buy_value,
+   breaks = qu <- quantile(buy_value, probs = seq(0,1, by=0.2), na.rm=T),
+   labels = round(qu[-1],2), include.lowest=TRUE))
+```
+
+```{r}
+# minamalist plot
+items %>%
+  filter(category %in% top_cateogories) %>%
+ggplot(.) +
+  geom_mosaic(aes(x = product(category, buy_value_cut), fill=category)) + 
+  theme_void() +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill="#18020C", color=NA)) +
+  scale_fill_manual(values = pal) +
+  ggsave("plot.png", dpi=400)
+```
+
+```{r}
+# plot with labels
+items %>%
+  filter(category %in% top_cateogories) %>%
+ggplot(.) +
+  geom_mosaic(aes(x = product(category, buy_value_cut), fill=category)) + 
+  theme(legend.position = "none",
+        plot.background = element_rect(fill="#18020C", color=NA),
+        panel.background = element_rect(fill="#18020C", color=NA),
+        text = element_text(family="FinkHeavy", color="#EEEEEE"),
+        axis.text = element_text(color="#EEEEEE"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.ticks = element_blank(),
+        plot.title = element_text(hjust=.5,vjust=-2),
+        plot.caption = element_text(size=5)
+        ) +
+  scale_fill_manual(values = pal) +
+  xlab("Range of Cost in Bells") + ylab("Item Category") +
+  ggtitle("Price Ranges of Top Item Categories in Animal Crossing New Horizons") +
+  labs(caption="Created by: @kkakey") +
+  ggsave("plot-2.png", dpi=400)
+```
+
