@@ -30,12 +30,12 @@ for (val in c("pal1", "pal2", "pal3", "pal4", "pal5", "pal6")) {
             x = 1:length, color = sample(LETTERS[1:4], 
                                          size = length, 
                                          replace = TRUE),
-            y_norm = rnorm(length, mean = 0, sd = 2))
+            norm_val = rnorm(length, mean = 0, sd = 2))
       
       num <- substr(val,4,5)
       
       ggplot(data = df) +
-        ggstream::geom_stream(aes(x = x, y = y_norm, 
+        ggstream::geom_stream(aes(x = x, y = norm_val, 
                                   color = color, fill = color),
                     type = "proportional") +
         scale_color_manual(values = rev(eval(as.name(val)))) +
