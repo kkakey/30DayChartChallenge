@@ -65,4 +65,10 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 <a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day09-Statistics/final.png" width="750" ></a>
 </p>
 
+**************************************************************************************************
+#### Day 10 - [Abstract](https://github.com/kkakey/30DayChartChallenge/blob/main/Day10-Abstract/day10.Rmd) 
+
+<p align="center">
+<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day10-Abstract/plot-2.png" width="750" ></a>
+</p>
 
