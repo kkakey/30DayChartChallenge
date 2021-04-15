@@ -5,7 +5,7 @@
 My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartChallenge_Collection2021), a daily social visualization project in April 2021.
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/Z3tt/30DayChartChallenge_Collection2021/main/img/topics_ol_blank.png" width="500" ></a>
+<a href="url"><img src="https://raw.githubusercontent.com/Z3tt/30DayChartChallenge_Collection2021/main/img/topics_ol_blank.png" width="560" ></a>
 </p>
 
 
@@ -69,6 +69,17 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 #### Day 10 - [Abstract](https://github.com/kkakey/30DayChartChallenge/blob/main/Day10-Abstract/day10.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day10-Abstract/plot-2.png" width="750" ></a>
+<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day10-Abstract/plot.png" width="750" ></a>
 </p>
+
+
+**************************************************************************************************
+#### Day 10 - [Strips](https://github.com/kkakey/30DayChartChallenge/blob/main/Day12-Strips/day12.Rmd) 
+
+<p align="center">
+<a href="url"><img src="https://github.com/kkakey/30DayChartChallenge/blob/main/Day12-Strips/plot1-2.png" width="750" ></a>
+</p>
+
+
+
 
