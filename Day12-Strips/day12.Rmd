@@ -63,6 +63,7 @@ url_images <- cbind(url_images,flower_names %>% select(flower))
 # this url doesn't work
 url_images<-url_images %>% 
   filter(url!="https://uswildflowers.com/images/full/dsc_9079.jpg")
+
 # write.csv(url_images, "wi_flowerimg.csv")
 ```
 

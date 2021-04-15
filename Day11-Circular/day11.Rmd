@@ -1,0 +1,128 @@
+---
+title: "Day 11"
+author: "Kristen A, kkakey"
+date: "4/15/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(RSocrata)
+library(foreach)
+library(sf)
+library(ggimage)
+library(tidyverse)
+
+### https://data.cityofnewyork.us/Transportation/Open-Restaurant-Applications/pitm-atqc
+restaurant <- read.socrata('https://data.cityofnewyork.us/resource/pitm-atqc.json')
+
+
+bagel_rest <- restaurant[grepl("bagel", tolower(restaurant$restaurant_name)),] %>%
+  mutate(address = paste(business_address, zip)) %>%
+  select(restaurant_name, latitude, longitude, business_address, street, zip, address)
+```
+
+```{r}
+# geocoding function
+bGeoCode <- function(str, BingMapsKey){
+  require(RCurl)
+  require(RJSONIO)
+  u <- URLencode(paste0("http://dev.virtualearth.net/REST/v1/Locations?q=", str, "&maxResults=1&key=", BingMapsKey))
+  d <- getURL(u)
+  j <- fromJSON(d) 
+  if (j$resourceSets[[1]]$estimatedTotal > 0) {
+    formatted.address<-paste(j$resourceSets[[1]]$resources[[1]]$address,collapse=",")
+    entity.type<-j$resourceSets[[1]]$resources[[1]]$entityType
+    
+    confidence<-j$resourceSets[[1]]$resources[[1]]$confidence[1]
+    lat <- j$resourceSets[[1]]$resources[[1]]$point$coordinates[[1]]
+    lng <- j$resourceSets[[1]]$resources[[1]]$point$coordinates[[2]]
+  }
+  else {    
+    formatted.address<-"Unmatched"
+    entity.type<-"Unmatched"
+    confidence<- "Unmatched"
+    lat <- "Unmatched"
+    lng <- "Unmatched"
+    cbind(str,formatted.address,entity.type,confidence,lat,lng)
+  }
+  cbind(str,formatted.address,entity.type,confidence,lat,lng)
+}  
+source("/Users/kristenakey/Desktop/R/api_key/bingmaps_key.R")
+
+
+# geocode addresses with missing lat/long
+missing_add <- bagel_rest %>%
+  filter(is.na(latitude)) %>%
+  pull(address)
+
+geocoded.addresses<-foreach(a=missing_add, .combine=rbind) %do% try(bGeoCode(a, my_key))
+
+# fill missing lat/longs
+bagel_rest[is.na(bagel_rest$latitude),]$latitude <- data.frame(geocoded.addresses)$lat
+bagel_rest[is.na(bagel_rest$longitude),]$longitude <- data.frame(geocoded.addresses)$lng
+```
+
+```{r}
+bagel_sf <- st_as_sf(bagel_rest, crs = 4326, coords = c("longitude", "latitude"))
+# filter to only Manhattam
+manhattan_bagels <- bagel_sf %>%
+  filter(zip %in% seq(10001,10282))
+# load Manhattan shapefile
+manh <- read_sf("./raw-data/manhattan.shp", crs=2263)
+```
+
+```{r}
+# some labels overlap and geom_sf_label_repel is not working :(
+remove_labels <- c("PICK-A-BAGEL/DUMPLING ROOM","BAGELS & CO", "Broadway Bagels Inc", 
+                   "BEST BAGEL &amp; COFFEE","Ray's Pizza And Bagel Cafe", 
+                   "Zucker's Bagels Flatiron", "Murray's Bagels Chelsea",
+                   "Tal Bagels", "Brooklyn Bagel & Coffee Company", "Bagel Boss", 
+                   "Bagel Express", "Bagel Cafe","MURRAY'S BAGELS", "Pick a bagel", 
+                   "Gramercy Bagels","Ny Jumbo Bagels", "bagelexpress 2")
+
+# set asp_ratio so images don't show up weird
+asp_ratio <- .45
+ggplot() +
+  geom_sf(data=manh, size=.08) +
+  geom_image(data=manhattan_bagels, aes(geometry=geometry,
+      image="./raw-data/bagel_filled.png"), 
+      size = 0.025, stat = "sf_coordinates", by="width", asp = asp_ratio) +
+  scale_size_identity() +
+  geom_sf_label(data=manhattan_bagels %>%
+        filter(!(restaurant_name %in% remove_labels),
+                        # second Tals location
+               address!='975-979 1st ave , Manhattan, NY 10022'), 
+                                                      aes(label=restaurant_name,
+                                                     family="KGManhattanScript"),
+               size=9, nudge_y=.0018,label.padding = unit(0.07, "lines"),
+                                           check_overlap = TRUE) +
+  coord_sf(lims_method = "geometry_bbox", clip = "off") +
+  theme_void() +
+  theme(plot.background = element_rect(fill="#A08794", color=NA),
+        text = element_text(family="KGManhattanScript"),
+        plot.title = element_text(size=107, vjust=-118, hjust=-.4),
+        plot.caption = element_text(family="BricksonFreeTrial", size=25, vjust = 85, hjust=.55)) +
+  ggtitle('Manhattan "Open" Bagel Shops') +
+  ggtext::geom_richtext(aes(x=-74.02,y=40.778, 
+                    label="Bagel shops that have added outdoor seating as part of reopening from Covid 19",
+                    family="BricksonFreeTrial"),
+                fill = NA, label.color = NA, size=15) +
+  geom_image(aes(x=-74.02,y=40.781,
+      image="./raw-data/bagel_filled.png"), 
+      size = 0.08,  by="width", asp = asp_ratio) +
+  labs(caption = "Data: NYC Open Data | Created by: @kkakey") +
+  ggsave("plot.png", dpi=1300) 
+```
+
+
+Bagel Icon created by: [Eric Miller, US](https://thenounproject.com/term/bagel/823752/)
+
+Fonts:
+- [Manhattan Script](https://www.dafont.com/kg-manhattan-script.font)
+- [Brickson](https://www.fontspace.com/brickson-font-f55812)
+
+
