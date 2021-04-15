@@ -1,0 +1,106 @@
+---
+title: "day12"
+author: "Kristen Akey, kka2120"
+date: "4/14/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+```{r}
+library(tidyverse) 
+library(magick) 
+library(scales) 
+library(imager) 
+library(rvest)
+```
+
+```{r}
+### color palette function
+### https://www.r-bloggers.com/2019/01/extracting-colours-from-your-images-with-image-quantization/
+get_colorPal <- function(im, n=8, cs="RGB"){
+  tmp <-im %>% image_resize("100") %>% 
+    image_quantize(max=n, colorspace=cs) %>%  
+    magick2cimg() %>% 
+    RGBtoHSV() %>%
+    as.data.frame(wide="c") %>%  
+    mutate(hex=hsv(rescale(c.1, from=c(0,360)),c.2,c.3),
+           hue = c.1,
+           sat = c.2,
+           value = c.3) %>%
+    count(hex, hue, sat,value, sort=T) %>% 
+    mutate(colorspace = cs)
+  
+  return(tmp %>% select(colorspace,hex,hue,sat,value,n)) 
+}
+```
+
+```{r}
+### get the data
+page <- read_html('https://uswildflowers.com/wfquery.php?State=WI')
+root_url <- 'https://uswildflowers.com/'
+
+url_images <- page %>%
+  html_nodes("a") %>% html_attr("href") %>%
+  as.data.frame() %>%
+  filter(str_detect(., 'images/full')) %>%
+  mutate(url = paste0(root_url, `.`)) %>%
+  select(url)
+
+flower_names <- page %>%
+  html_nodes("a") %>% html_attr("href") %>%
+  as.data.frame() %>%
+  filter(!str_detect(., 'images/full')) %>%
+  # remove text before equal sign
+  mutate(flower = str_replace(`.`, ".*=",""),
+         flower = str_replace(flower, "%20"," "))
+flower_names <- flower_names[c(10:nrow(flower_names)-1),]
+# bind url and flower name
+url_images <- cbind(url_images,flower_names %>% select(flower))
+# this url doesn't work
+url_images<-url_images %>% 
+  filter(url!="https://uswildflowers.com/images/full/dsc_9079.jpg")
+# write.csv(url_images, "wi_flowerimg.csv")
+```
+
+```{r}
+pal_df <- data.frame()
+for (url in seq(nrow(url_images))) {
+      im <- magick::image_read(url_images$url[url])
+      output <- get_colorPal(im, 8)
+      output$flower <- url_images$flower[url]
+      output$y <- seq(url,url+nrow(output)-1,1)
+      pal_df <- rbind(pal_df, output)
+}
+```
+
+
+```{r}
+ggplot(pal_df, aes(x = 0, y = y, fill = hex)) +
+  geom_col(position = 'fill', show.legend = F,width=40) +
+  scale_fill_identity() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_reverse(expand = c(0,0)) +
+  theme_void() +
+  theme(panel.background = element_blank(),
+        plot.background = element_blank(),
+        plot.margin = margin(2,0,-5,0),
+        text = element_text(family="SummerbeeRegular", size=15),
+        plot.caption = element_text(size=7,vjust=3)) +
+  coord_flip() +
+  ggtitle("Colors of Wisconsin Wildflowers") +
+  labs(caption = "Data: U.S. Wildflowers | Created by: @kkakey") +
+  ggsave("plot1-2.png", width=10, height=4.5)
+```
+
+
+
+
+
+
+
+
+
