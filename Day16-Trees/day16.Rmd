@@ -1,0 +1,102 @@
+---
+title: "day16"
+author: "Kristen A, kkakey"
+date: "4/21/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(geojsonio)
+library(sf)
+library(tidyverse)
+library(rgeos)
+library(ggtree)
+library(cowplot)
+```
+
+```{r}
+# tree data
+spdf <- geojson_read("https://opendata.arcgis.com/datasets/b700541a20e446839b18d62426c266a3_0.geojson",  what = "sp")
+trees <- st_as_sf(spdf)
+
+# wards
+sp_wards <- geojson_read("https://opendata.arcgis.com/datasets/9ec1480a4d1a46bc89d47c9d73057331_11.geojson",  what = "sp")
+sp_wards <- gBuffer(sp_wards, byid=TRUE, width=0)
+wards <- st_as_sf(sp_wards)
+
+# Madison border
+madison <- read_sf("./data/Madison_Urban_Area_Boundary-shp/Madison_Urban_Area_Boundary.shp")
+sp_madison <- as(madison, "Spatial")
+sp_madison <- gBuffer(sp_madison, byid=TRUE, width=0)
+```
+
+```{r}
+# intersect wards data to Madison boundary data
+madison_wards=raster::intersect(sp_madison, sp_wards)
+madison_wards_sf <- st_as_sf(madison_wards)
+# join trees to wards
+madison_wards_trees_sf <- madison_wards_sf %>%
+  st_join(trees)
+```
+
+```{r}
+# top 20 wards with the most trees
+madison_wards_trees_sf %>%
+  as.data.frame() %>%
+  group_by(WARD) %>%
+  mutate(tree_count = n()) %>%
+  select(WARD, tree_count) %>%
+  arrange(desc(tree_count)) %>%
+  distinct() %>%
+  head(20) %>% pull(WARD) -> most_trees
+```
+
+```{r}
+myplots <- list()
+for(i in 1:20){
+  
+  df_sub <- madison_wards_trees_sf %>% 
+    as.data.frame() %>%
+    filter(!is.na(SPECIES), WARD==most_trees[i]) %>%
+    count(SPECIES) 
+  
+    rownames(df_sub) <- as.double(df_sub$SPECIES)
+    dd <- dist(df_sub, method = "euclidean")
+    hc <- hclust(dd, method = "ward.D2")
+    
+    myplots[[i]] <- ggtree(hc, layout="daylight", branch.length = 'none',
+                           color="#F5F8DE") +
+        ggtitle(paste("Ward ", most_trees[i])) +
+        theme(text = element_text(family="Quesha"),
+              plot.title = element_text(size = 30, hjust=.5, color="#2A0C4E"),
+              plot.margin = unit(c(.2,-.5,.2,-.5), "cm"),
+              plot.background = element_rect(fill="#3B5249", color=NA),
+              panel.background = element_rect(fill="#3B5249", color=NA)
+              )
+  }
+
+plot=plot_grid(plotlist=myplots, ncol=5, greedy=T, 
+                        scale=1, rel_widths=1.5)
+
+ggdraw(plot) +
+  theme(plot.background = element_rect(fill="#3B5249", color = NA))
+
+ggsave(filename="plot.png", height=7.85, width=8.5) 
+```
+
+```{r}
+# add title to plot
+ggdraw() + draw_image("plot2-2.png", scale = .95, y=-.02) +
+  draw_label("Clusterings of Tree Species by Most Tree Populated Wards - Madison, WI",size=54,y=.98,fontfamily="Quesha", color = "#2A0C4E") +
+  theme(plot.background = element_rect(fill="#3B5249", color = NA)) 
+
+ggsave(filename="final.png", width=7.5, height=7, dpi=350)
+```
+
+
+Font:
+- [Quesha](https://www.fontspace.com/quesha-font-f28300)
