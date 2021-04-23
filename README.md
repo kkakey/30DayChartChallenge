@@ -81,5 +81,9 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 
 ![](https://github.com/kkakey/30DayChartChallenge/blob/main/Day12-Strips/plot1-2.png)
 
+**************************************************************************************************
+#### Day 12 - [Trees](https://github.com/kkakey/30DayChartChallenge/blob/main/Day16-Trees/day16.Rmd) 
+
+![](https://github.com/kkakey/30DayChartChallenge/blob/main/Day16-Trees/final.png)
 
 
