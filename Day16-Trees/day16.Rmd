@@ -90,7 +90,7 @@ ggsave(filename="plot.png", height=7.85, width=8.5)
 
 ```{r}
 # add title to plot
-ggdraw() + draw_image("plot2-2.png", scale = .95, y=-.02) +
+ggdraw() + draw_image("plot.png", scale = .95, y=-.02) +
   draw_label("Clusterings of Tree Species by Most Tree Populated Wards - Madison, WI",size=54,y=.98,fontfamily="Quesha", color = "#2A0C4E") +
   theme(plot.background = element_rect(fill="#3B5249", color = NA)) 
 
