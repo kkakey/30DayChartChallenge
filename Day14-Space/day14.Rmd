@@ -1,0 +1,122 @@
+---
+title: "Day 14"
+author: "Kristen A, kkakey"
+date: "4/24/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(ggtext)
+library(ggfx)
+```
+
+```{r}
+launches <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-01-15/launches.csv")
+```
+
+```{r}
+launches %>%
+  group_by(state_code) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  slice(1:4) %>% pull(state_code) -> most_state
+
+l_df <- launches %>%
+  filter(state_code %in% most_state,
+         category=="O") %>%
+  group_by(launch_year, state_code) %>%
+  arrange(launch_date) %>%
+  mutate(n = n(),
+         launch_state = paste0(launch_year,"-",state_code)) %>%
+  select(state_code, launch_year, n) %>% distinct() 
+
+# placement of line segments
+l_df$ID <- seq(1,length.out =nrow(l_df),by=5)
+
+# create labels for x-axis
+x_labs <- l_df[!duplicated(l_df$launch_year),] %>%
+  ungroup() %>%
+  select(launch_year, ID) %>%
+  filter(launch_year!=1957)
+```
+
+```{r}
+# plot
+ggplot(l_df,aes(ID, n)) +
+  with_outer_glow(
+    geom_segment(data= l_df %>% filter(state_code=="CN"),
+                  aes(x=ID, y=0, xend=ID, 
+                      yend=n),color="#ffffff", size=.2),
+          colour="#ffffff", sigma=5, expand=3) +
+  with_outer_glow(
+    geom_segment(data= l_df %>% filter(state_code=="RU"),
+                  aes(x=ID, y=0, xend=ID, 
+                      yend=n),color="#DA291C", size=.2),
+          colour="#DA291C", sigma=5, expand=3) +
+  with_outer_glow(
+    geom_segment(data= l_df %>% filter(state_code=="SU"),
+                  aes(x=ID, y=0, xend=ID, 
+                      yend=n),color="#FFD900", size=.2),
+          colour="#FFD900", sigma=5, expand=3) +
+  with_outer_glow(
+    geom_segment(data= l_df %>% filter(state_code=="US"),
+                  aes(x=ID, y=0, xend=ID, 
+                      yend=n),color="#1F51FF", size=.2),
+          colour="#1F51FF", sigma=5, expand=3) +
+  with_outer_glow(
+    geom_point(data= l_df %>% filter(state_code=="CN"),
+                               color = "#ffffff"),
+                  colour="#ffffff", sigma=10,expand=2)+
+  with_outer_glow(
+    geom_point(data= l_df %>% filter(state_code=="RU"),
+                               color = "#DA291C"),
+                  colour="#DA291C", sigma=10,expand=2)+
+  with_outer_glow(
+    geom_point(data= l_df %>% filter(state_code=="SU"),
+                               color = "#FFD900"),
+                  colour="#FFD900", sigma=10,expand=2)+
+  with_outer_glow(
+    geom_point(data= l_df %>% filter(state_code=="US"),
+                               color = "#1F51FF"),
+                  colour="#1F51FF", sigma=10,expand=2)+
+  theme(axis.text.y = element_text(size=16, color="white",
+                                   hjust = 2.5),
+        axis.text.x = element_blank(),
+        plot.background = element_rect(fill="black", color=NA),
+        panel.background = element_rect(fill="black", color=NA),
+        legend.position = "none",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(), axis.ticks = element_blank(),
+        text = element_text(family="Roboto-Regular"),
+        plot.caption = element_text(family="Roboto-Regular",
+                                    color="white",
+                                    hjust=.95,vjust=45)
+        ) + 
+  scale_color_manual(values = c("#ffffff","#DA291C","#FFD900","#1F51FF")) +
+  scale_x_continuous(breaks = seq(-100,1000)) +
+  xlab("") + ylab("") +
+  geom_text(data=x_labs, 
+            aes(x=ID, y =-.8, label=launch_year), 
+            color="white", size=3, angle=0) +
+  geom_text(aes(x=631,y=85,label="Race to Space",family="Paladins3D"),
+            size=20, color="white") +
+  geom_richtext(aes(x=631,y=78,
+                    label=paste0("The number of successful space missions over time<br>",
+                    "by the countries with the most space missions to date,<br>",
+                    " <span style = 'color:#1F51FF'>United States,</span> ",
+                    " <span style = 'color:#FFD900'>Soviet Union,</span> ",
+                    " <span style = 'color:#D3D3D3'>Canada,</span> ",
+                    " <span style = 'color:white'>and</span> ",
+                    " <span style = 'color:#DA291C'>Russia</span> "),
+            family="Roboto-Regular"),size=8, color="white", fill = NA, 
+            label.color = NA, lineheight = 0.5) +
+  labs(caption = "Data: The Economist | Created by: @kkakey") +
+  ggsave("plot2.png", width=10)
+```
+
