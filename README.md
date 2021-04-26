@@ -84,7 +84,9 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 **************************************************************************************************
 #### Day 14 - [Space](https://github.com/kkakey/30DayChartChallenge/blob/main/Day14-Space/day14.Rmd) 
 
-![](https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day14-Space/plot2.png)
+<p align="center">
+<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day14-Space/plot2.png" width="750" ></a>
+</p>
 
 **************************************************************************************************
 #### Day 16 - [Trees](https://github.com/kkakey/30DayChartChallenge/blob/main/Day16-Trees/day16.Rmd) 
