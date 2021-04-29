@@ -21,6 +21,11 @@ background <- data.frame(background = c("#ADE4FF", "#3C1518", "#FDCA40", "#C06E5
 ```
 
 ```{r}
+library(tidyverse)
+length = 100
+```
+
+```{r}
 for (val in c("pal1", "pal2", "pal3", "pal4", "pal5", "pal6")) {
     
     if (val!="background") {
