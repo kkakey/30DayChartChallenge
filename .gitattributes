@@ -1,0 +1,3 @@
+*.rmd  linguist-detectable
+*.Rmd  linguist-detectable
+*.R  linguist-detectable
