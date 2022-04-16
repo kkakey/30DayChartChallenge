@@ -1,0 +1,120 @@
+---
+title: 'Day 1: Part-to-whole'
+author: "Kristen A, kkakey"
+date: "4/1/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### **[30 Day Chart Challenge](https://github.com/30DayChartChallenge/Edition2022)**
+
+```{r}
+library(tidyverse)
+library(waffle)
+library(ggtext)
+```
+
+Data: https://data2.unhcr.org/en/documents/details/91719
+- Accessed April 1, 2022
+"The Russian Federation launched a military offensive against Ukraine on 24
+February 2022. In 5 weeks, a quarter of the population of Ukraine have been
+forced to flee their homes. As of today, more than 4 million refugees have fled
+Ukraine, making this the fastest growing refugee crisis since World War II. A
+further 6.5 million people have been displaced internally within Ukraine."
+
+--------
+
+1 square = ~100,000 people
+Total Population: ~44 million
+
+--------
+
+```{r}
+library(showtext)
+font_add("Arimo-Regular", "/Fonts/Arimo-Regular.ttf")  
+showtext_auto()
+```
+
+```{r}
+### I created a custom dataframe of the underlying numbers in order to create 
+### a waffle plot that also resembed the Ukrianian flag
+
+### 1 square = ~100,000 people
+### Total Population: ~44 million
+
+## Fled Ukraine (40 squares)
+y = rep_len(1:7,length.out=40)
+x = sort(rep_len(1:length(y[y==7]),length.out=40))
+
+## Displaced Internally (65 squares)
+y2 = rep_len(0:-6,65)
+x2 = sort(rep_len(1:length(y2[y2==-6]),65))
+
+## Remaining 339 squares
+y3_1 = rep(1:7,4)
+y3_2 = rep_len(-6:7, 339-length(y3_1))
+
+x3_1 = sort(rep_len(6:9,length.out=length(y3_1)))
+x3_2 = sort(rep_len(10:(311/14),length.out=(339-length(y3_1))))
+
+bottom_y <- y3_2[y3_2<=0]
+bottom_x <- x3_2[y3_2<=0]
+top_y <- y3_2[y3_2>0]
+top_x <- x3_2[y3_2>0]
+
+fill = c(rep("g1", 40), rep("g2", 65), rep("g3", length(y3_1)), rep("g4", length(top_y)), rep("g5", length(bottom_y)))
+col = c(rep(0, (40+65)), rep(1, length(y3_1)), rep(2, length(top_y)), rep(3, length(bottom_y)))
+
+df <- data.frame(x=c(x,x2,x3_1,top_x, bottom_x), y=c(y,y2,y3_1,top_y, bottom_y), fill)
+```
+
+
+```{r}
+# background <- "#FFF8D6"
+background <- "#FFFCEB"
+
+lab <- paste0("<span style = 'color:black'>", "On February 24, 2022, Russia launched a military attack on Ukraine. ", 
+              "In a few short weeks, at<br>least a quarter of Ukrainians have been forced to flee their homes.",
+              "Of the country's 44 million civilians,<br>", "</span>", 
+                "<span style = 'color:#FFD500'; font-weight: bold; font-size: 10;>", " 4 million ", "</span>", 
+                "<span style = 'color:black'>", "have fled the country,","</span>", 
+                "<span style = 'color:#005BBB'; font-weight: bold; font-size: 10;>", "6.5 million ", 
+                "</span>", "are internally displaced, and many others are estimated to<br>be stranded ", 
+              "in affected areas without resources or information.<br><br>It is the fastest growing refugee crsis",
+              "since World War II.")
+
+ggplot() +
+  ### make sure geom_richtext() comes before main assigned aesethics if adding one annotation!
+  ### I originally had `data=df, aes(x, y, fill=fill, color=as.factor(col)` inside `ggplot()`
+  ### and it was causing great problems with me using geom_richtext as an annotation tool!
+  ggtext::geom_richtext(aes(x=11.5,y=8.9, label=lab, family="Arimo-Regular"),
+            size=8, color="black", inherit.aes = F, fill = NA, 
+            label.color = NA,
+            lineheight = .25)  +
+  ggtext::geom_richtext(aes(x=0,y=-6.95, label="One tile represents<br>~100,000 Ukrainians", family="Arimo-Regular"),
+            size=6, color="black", inherit.aes = F, fill = NA, 
+            label.color = NA,
+            lineheight = .25)  +
+  geom_tile(data=df, aes(x, y, fill=fill, color=as.factor(col)),
+            width = .9, height = .9, size=.4) +
+  scale_fill_manual(values = c("#005BBB","#FFD500",  "#C7CDD5","#C7CDD5","#E4E0CB")) +
+  scale_color_manual(values = c("black", "#C7CDD5", "#C7CDD5", "#E4E0CB")) +
+  theme_void() +
+  theme(legend.position = "none",
+        plot.background = element_rect(color=background, fill=background),
+        panel.background = element_rect(color=background, fill=background),
+        plot.margin = margin(t=1.5, r=2, b=1, l=2, "cm"),
+        plot.title = element_text(family="Arimo-Regular", color = "black",
+                                  size=65, hjust=.5, vjust=2.3,
+                                  margin = margin(t = 0, b = 5, l = 0)),
+        plot.caption = element_text(family="Arimo-Regular", color = "black",
+                                  size=15, vjust = -6, lineheight = .25)
+        ) +
+  ggtitle("The War on Ukriane") +
+  labs(caption = "Data: UNHCR, as of April 1, 2022\nCreated by: @kkakey") +
+  coord_fixed(clip = "off", expand = T) 
+ggsave("plot.png", width = 8, height = 5)
+```
