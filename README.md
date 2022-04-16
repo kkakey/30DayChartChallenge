@@ -1,6 +1,13 @@
 # 30DayChartChallenge
 
 ************************************
+#### Day 1, 2022 - [Part-to-whole](https://github.com/kkakey/30DayChartChallenge/blob/main/2022/Day01-Part_to_whole/day1.Rmd) 
+
+<p align="center">
+<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/2022/Day01-Part_to_whole/plot.png" width="650" ></a>
+</p>
+
+************************************
 
 My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartChallenge_Collection2021), a daily social visualization project in April 2021.
 
