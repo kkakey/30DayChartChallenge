@@ -1,0 +1,83 @@
+---
+title: "Day1-Part_to_whole"
+format: html
+editor: visual
+---
+
+```{r}
+# install.packages('spotifyr')
+library(spotifyr)
+library(dplyr)
+library(purrr)
+library(ggplot2)
+library(treemapify)
+library(colorfindr)
+library(webshot)
+```
+
+```{r}
+access_token <- get_spotify_authorization_code(scope = 'user-top-read')
+
+top_fav_short <- 
+  get_my_top_artists_or_tracks(type = 'tracks', 'short_term', offset=0,
+                               limit = 50, authorization = access_token) 
+
+data <- 
+  top_fav_short %>%
+    transmute(
+        song = name,
+        # get track artist
+        artist = map(.$artists, ~pluck(.x$name)[1]) %>% unlist(),
+        # get track artwork
+        album_art = map_chr(.$album.id, ~get_album(.x)[['images']]$url[1])
+        ) 
+
+
+# save local images of alubum covers (since they are not technically image file urls)
+map2(data$song, data$album_art, ~webshot(.y, glue::glue("album_covers/{tolower(.x)}.png")))
+
+# get color from album artwork
+data <- 
+  data %>%
+    mutate(color = map_chr(song, ~get_colors(glue::glue('album_covers/{tolower(.x)}.png'))$col_hex %>% .[100]))
+
+data_agg <-
+  data %>%
+    group_by(artist) %>%
+    summarise(
+      songs = paste(unique(song), collapse = ", "),
+      n = n()
+    ) %>%
+  left_join(., data %>% select(artist, album_art, color) %>% slice(1, .by = artist), by='artist')
+
+write.csv(data_agg, file = 'artists_my_top_50.csv', row.names = F)
+```
+
+Artists of my top 50 songs from the last month
+
+```{r}
+data_agg %>%
+  mutate(label_color_dark = ifelse(artist %in% c("Kate Bush", "Dua Lipa", "Sarah Cothran"), T, F)) %>%
+ggplot(., aes(area=n,fill=artist,label=artist, size=n))+ 
+  treemapify::geom_treemap(color = "#534E39") +
+  scale_fill_manual(values = data_agg$color) +
+  theme(
+    text = element_text(family="Franie Test"),
+    legend.position = "none",
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "#F5E9B2", colour = "#F5E9B2", size = 0.5, linetype = "solid"),
+    plot.margin = margin(t=4.5, r=.5, b=.5, l=.5, "cm")
+  ) + 
+    geom_treemap_text(
+      aes(colour = label_color_dark),
+      family="Franie Test", place = "centre", size = 12, grow = TRUE) +
+    scale_color_manual(values = c('TRUE' = 'black', 'FALSE' = 'white'), guide = "none")
+
+ggsave("plot.png", height = 5, width = 6, dpi=600)
+# add title text using Affinity Designer
+```
+
+font: https://befonts.com/downfile/9e35e1f5a1357b8be92bcd14fb1b7cb3.435738 
