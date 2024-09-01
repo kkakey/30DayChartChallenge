@@ -1,4 +1,10 @@
 # 30DayChartChallenge
+************************************
+#### Day 1, 2024 - [Part-to-whole]([https://github.com/kkakey/30DayChartChallenge/blob/main/2022/Day01-Part_to_whole/day1.Rmd](https://github.com/kkakey/30DayChartChallenge/blob/main/2024/Day1-Part_to_whole/day1.qmd)) 
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/2024/Day1-Part_to_whole/plot-final.png" width="650" >
+</p>
 
 ************************************
 #### Day 1, 2022 - [Part-to-whole](https://github.com/kkakey/30DayChartChallenge/blob/main/2022/Day01-Part_to_whole/day1.Rmd) 
