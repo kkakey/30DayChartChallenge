@@ -4,7 +4,7 @@
 #### Day 1, 2022 - [Part-to-whole](https://github.com/kkakey/30DayChartChallenge/blob/main/2022/Day01-Part_to_whole/day1.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/2022/Day01-Part_to_whole/plot.png" width="650" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/2022/Day01-Part_to_whole/plot.png" width="650" >
 </p>
 
 ************************************
@@ -17,70 +17,70 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 #### Day 1 - [Part-to-whole](https://github.com/kkakey/30DayChartChallenge/blob/main/Day01-Part_to_whole/day1.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day01-Part_to_whole/plot-final.png" width="650" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day01-Part_to_whole/plot-final.png" width="650" >
 </p>
 
 **************************************************************************************************
 #### Day 2 - [Pictogram](https://github.com/kkakey/30DayChartChallenge/blob/main/Day02-Pictogram/day2.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day02-Pictogram/plot.png" width="650" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day02-Pictogram/plot.png" width="650" >
 </p>
 
 **************************************************************************************************
 #### Day 3 - [Historical](https://github.com/kkakey/30DayChartChallenge/blob/main/Day03-Historical/day3.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day03-Historical/plot-final.png" width="500" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day03-Historical/plot-final.png" width="500" >
 </p>
 
 **************************************************************************************************
 #### Day 4 - [Magical](https://github.com/kkakey/30DayChartChallenge/blob/main/Day04-Magical/day4.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day04-Magical/plot.png" width="700" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day04-Magical/plot.png" width="700" >
 </p>
 
 **************************************************************************************************
 #### Day 5 - [Slope](https://github.com/kkakey/30DayChartChallenge/blob/main/Day05-Slope/day5.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day05-Slope/plot.png" width="600" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day05-Slope/plot.png" width="600" >
 </p>
 
 **************************************************************************************************
 #### Day 6 - [Experimental](https://github.com/kkakey/30DayChartChallenge/blob/main/Day06-Experimental/day6.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day06-Experimental/plot-21.png" width="750" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day06-Experimental/plot-21.png" width="750" >
 </p>
 
 **************************************************************************************************
 #### Day 7 - [Physical](https://github.com/kkakey/30DayChartChallenge/blob/main/Day07-Distribution/day7.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day07-Distribution/plot.png" width="750" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day07-Distribution/plot.png" width="750" >
 </p>
 
 **************************************************************************************************
 #### Day 9 - [Statistics](https://github.com/kkakey/30DayChartChallenge/blob/main/Day09-Statistics/Day09-Statistics.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day09-Statistics/final.png" width="750" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day09-Statistics/final.png" width="750" >
 </p>
 
 **************************************************************************************************
 #### Day 10 - [Abstract](https://github.com/kkakey/30DayChartChallenge/blob/main/Day10-Abstract/day10.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day10-Abstract/plot.png" width="750" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day10-Abstract/plot.png" width="750" >
 </p>
 
 **************************************************************************************************
 #### Day 11 - [Circular](https://github.com/kkakey/30DayChartChallenge/blob/main/Day11-Circular/day11.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day11-Circular/plot.png" width="750" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day11-Circular/plot.png" width="750" >
 </p>
 
 **************************************************************************************************
@@ -92,7 +92,7 @@ My contributions to [#30DayChartChallenge](https://github.com/Z3tt/30DayChartCha
 #### Day 14 - [Space](https://github.com/kkakey/30DayChartChallenge/blob/main/Day14-Space/day14.Rmd) 
 
 <p align="center">
-<a href="url"><img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day14-Space/plot2.png" width="750" ></a>
+<img src="https://raw.githubusercontent.com/kkakey/30DayChartChallenge/main/Day14-Space/plot2.png" width="750" >
 </p>
 
 **************************************************************************************************
